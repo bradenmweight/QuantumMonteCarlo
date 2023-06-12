@@ -1,6 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-#import random
+from scipy.interpolate import interp1d
 
 def V(x, omega, model):
     if ( len(x.shape) == 2 ):
@@ -8,18 +8,19 @@ def V(x, omega, model):
     else:
         x2 = x**2
     
+    # WHICH HAMILTONIAN DO WE WANT ?
     if ( model == "QHO" ):
         return 0.5 * omega**2 * x2 # Quantum Harmonic Oscillator
+    
     elif ( model == "ISW" ):
         return np.array([ 0 if (-1 < np.sqrt(x2[w]) < 1) else \
                           1000 for w in range(len(x2))  ]) # Infinite Square Well
 
 
 def DMC(num_walkers, num_steps, time_step, coupling, omega, E_TRIAL, dimension, model):
+
     # Initialize positions of the walkers
-    #positions = np.random.randn(num_walkers, dimension)
-    #positions = np.array([ [(random.random()*2-1)*3 for d in range(dimension)] for w in range(num_walkers) ] )
-    positions = (np.random.uniform(size=(num_walkers,dimension))*2-1)*10
+    positions = (np.random.uniform(size=(num_walkers,dimension))*2-1)*2
 
     # Initialize the weights of the walkers
     weights = np.ones(num_walkers)
@@ -27,20 +28,18 @@ def DMC(num_walkers, num_steps, time_step, coupling, omega, E_TRIAL, dimension, 
     for step in range(num_steps):
         # Propagate the walkers
         positions += np.random.normal(0, 1, size=(len(positions), dimension))*np.sqrt(2*coupling*time_step)
-        #positions += np.array([ [random.gauss(0, 1)*np.sqrt(2*coupling*time_step) for d in range(dimension)] for w in range(len(positions)) ] )
 
         # Compute the potential energy for each walker
         potential_energies = V(positions, omega, model)
 
         # Compute the weights of the walkers
-        alpha = 0.5 # Arbitrary parameter
+        alpha = 0.1 # Arbitrary parameter
         E_TRIAL = E_TRIAL + alpha * np.log( num_walkers / len(positions) )
         weights = np.exp(-time_step * (potential_energies - E_TRIAL))
-        #print( "E Trial:", E_TRIAL, num_walkers, len(positions) )
+        #print( "E Trial:", round(E_TRIAL,4), num_walkers, len(positions) )
 
         # Evaluate q = s + r
         s        = np.zeros(( len(weights) ), dtype=int)
-        #RAND     = np.array([ random.random() for w in range(len(positions)) ])
         RAND     = np.random.uniform(size=len(positions))
         IND_ZERO = weights < RAND  # s --> 0
         IND_2    = weights - 1 > RAND # s --> 2
@@ -62,16 +61,16 @@ def DMC(num_walkers, num_steps, time_step, coupling, omega, E_TRIAL, dimension, 
     return positions
 
 # Parameters
-num_walkers = 10000
-num_steps = 2000
+num_walkers = 5000
+num_steps = 500
 time_step = 0.01
 coupling = 0.5
 omega = 1.0
-E_TRIAL = 1.5
-dimension = 10
+E_TRIAL = 0.5
+dimension = 6
 model = "QHO" # "QHO" -- Performs best, "ISW" -- Performs poorly
 
-# Run the DMC simulation
+# Run the DMC simulation for GS
 positions = DMC(num_walkers, num_steps, time_step, coupling, omega, E_TRIAL, dimension, model)
 
 # Print the results
@@ -97,12 +96,22 @@ elif ( model == "ISW" ):
     X = np.linspace( -1,1,2000 )
     PSI_0_EXACT = np.cos( np.pi * X / L ) + E_EXACT
 
-
 # Compute Observables with DQMC Wavefunction
+NX = len(EDGES)
 dX = EDGES[1] - EDGES[0]
 AVE_X  = np.sum( EDGES    * PSI_0_DMQ**2 ) * dX
 AVE_X2 = np.sum( EDGES**2 * PSI_0_DMQ**2 ) * dX
-print( "\t<x> = %1.4f, <x^2> = %1.4f, <x^2>-<x^2> = %1.4f" % (AVE_X, AVE_X2, AVE_X2 - AVE_X**2 ) )
+print( "\t<x> = %1.4f, <x^2> = %1.4f, <x^2>-<x>^2 = %1.4f" % (AVE_X, AVE_X2, AVE_X2 - AVE_X**2 ) )
+# Centered DFT for <p> and <p^2>
+n, m   = np.arange(NX).reshape( (-1,1) ), np.arange(NX).reshape( (1,-1) )
+W      = np.exp( -2j*np.pi * (m-NX//2) * (n-NX//2) / NX )
+f_k    = (W @ PSI_0_DMQ).real * dX / np.sqrt( 2 * np.pi )
+kmax   = 1 / 2 / dX # This is not angular frequency
+k      = np.linspace( -kmax, kmax, NX )
+dk     = k[1] - k[0]
+AVE_P  = np.sum( k    * f_k**2 ) * dX
+AVE_P2 = np.sum( k**2 * f_k**2 ) * dX
+print( "\t<p> = %1.4f, <p^2> = %1.4f, <p^2>-<p>^2 = %1.4f" % (AVE_P, AVE_P2, AVE_P2 - AVE_P**2 ) )
 
 # Plot the Results
 plt.plot( EDGES, PSI_0_DMQ / np.max(PSI_0_DMQ) + E_AVE, "-o", c="red", label="DQMQ" )
