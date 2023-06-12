@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH -p debug
+#SBATCH -J QMC
+#SBATCH -o output.slurm
+#SBATCH -t 1:00:00
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=12
+#SBATCH --mem 30GB
+
+export OMP_NUM_THREADS=12
+export MKL_NUM_THREADS=12
+
+python3 QMC.py
+

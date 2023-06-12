@@ -1,7 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-import random
-from numba import jit
+#import random
 
 def V(x, omega, model):
     if ( len(x.shape) == 2 ):
@@ -14,24 +13,13 @@ def V(x, omega, model):
     elif ( model == "ISW" ):
         return np.array([ 0 if (-1 < np.sqrt(x2[w]) < 1) else \
                           1000 for w in range(len(x2))  ]) # Infinite Square Well
-    elif ( model == "ISW_STEP" ):
-        V = np.zeros( (len(x2)) )
-        for w in range(len(x2)):
-            if ( -1 < np.sqrt(x2[w]) < 0 ):
-                V[w] = 0
-            elif ( 0 < np.sqrt(x2[w]) < 1 ):
-                V[w] = 1
-            else:
-                V[w] = 1000
-        return V
-
 
 
 def DMC(num_walkers, num_steps, time_step, coupling, omega, E_TRIAL, dimension, model):
     # Initialize positions of the walkers
     #positions = np.random.randn(num_walkers, dimension)
     #positions = np.array([ [(random.random()*2-1)*3 for d in range(dimension)] for w in range(num_walkers) ] )
-    positions = (np.random.uniform(size=(num_walkers,dimension))*2-1)*1
+    positions = (np.random.uniform(size=(num_walkers,dimension))*2-1)*10
 
     # Initialize the weights of the walkers
     weights = np.ones(num_walkers)
@@ -81,17 +69,17 @@ coupling = 0.5
 omega = 1.0
 E_TRIAL = 1.5
 dimension = 10
-model = "QHO" # "QHO", "ISW", "ISW_STEP"
+model = "QHO" # "QHO" -- Performs best, "ISW" -- Performs poorly
 
 # Run the DMC simulation
 positions = DMC(num_walkers, num_steps, time_step, coupling, omega, E_TRIAL, dimension, model)
 
 # Print the results
-print("Number of Walkers:", len(positions))
-print("Average position:", np.average( positions, axis=0 ))
+print("\n\tNumber of Walkers:", len(positions))
+print("\tAverage position:", np.average( positions, axis=0 ))
 E_AVE = np.average( V(positions,omega, model), axis=0 )
-E_STD = np.std( V(positions,omega, model), axis=0 )
-print("Average energy: %1.4f (%1.4f)" % (E_AVE,E_STD) )
+E_STD = np.var( V(positions,omega, model), axis=0 )
+print("\tAverage energy: %1.4f (%1.4f)" % (E_AVE,E_STD) )
 
 # DMQ Result
 PSI_0_DMQ, EDGES = np.histogram( positions[:,:].flatten(), bins=25 )
@@ -108,9 +96,13 @@ elif ( model == "ISW" ):
     E_EXACT = np.pi**2 / (2 * L**2)
     X = np.linspace( -1,1,2000 )
     PSI_0_EXACT = np.cos( np.pi * X / L ) + E_EXACT
-elif ( model == "ISW_STEP" ):
-    X = np.linspace( -1,1,2000 )
-    PSI_0_EXACT = X*float("Nan")
+
+
+# Compute Observables with DQMC Wavefunction
+dX = EDGES[1] - EDGES[0]
+AVE_X  = np.sum( EDGES    * PSI_0_DMQ**2 ) * dX
+AVE_X2 = np.sum( EDGES**2 * PSI_0_DMQ**2 ) * dX
+print( "\t<x> = %1.4f, <x^2> = %1.4f, <x^2>-<x^2> = %1.4f" % (AVE_X, AVE_X2, AVE_X2 - AVE_X**2 ) )
 
 # Plot the Results
 plt.plot( EDGES, PSI_0_DMQ / np.max(PSI_0_DMQ) + E_AVE, "-o", c="red", label="DQMQ" )
@@ -123,4 +115,6 @@ plt.ylim( 0, 1.5*(np.max(PSI_0_DMQ / np.max(PSI_0_DMQ)) + E_AVE) )
 plt.xlabel("Position, X",fontsize=15)
 plt.ylabel("Wavefunction / Potential Energy",fontsize=15)
 plt.title(f"Diffusion QMC Results: {model} {dimension}D",fontsize=15)
-plt.savefig("weights.jpg",dpi=300)
+plt.savefig("WAVEFUNCTION.jpg",dpi=300)
+
+print("\n")
