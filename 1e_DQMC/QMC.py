@@ -8,13 +8,9 @@ def V(x, omega, model):
     else:
         x2 = x**2
     
-    # WHICH HAMILTONIAN DO WE WANT ?
     if ( model == "QHO" ):
         return 0.5 * omega**2 * x2 # Quantum Harmonic Oscillator
-    
-    elif ( model == "ISW" ):
-        return np.array([ 0 if (-1 < np.sqrt(x2[w]) < 1) else \
-                          1000 for w in range(len(x2))  ]) # Infinite Square Well
+
 
 
 def DMC(num_walkers, num_steps, time_step, coupling, omega, E_TRIAL, dimension, model):
@@ -68,7 +64,7 @@ coupling = 0.5
 omega = 1.0
 E_TRIAL = 0.5
 dimension = 6
-model = "QHO" # "QHO" -- Performs best, "ISW" -- Performs poorly
+model = "QHO" # "QHO"
 
 # Run the DMC simulation for GS
 positions = DMC(num_walkers, num_steps, time_step, coupling, omega, E_TRIAL, dimension, model)
@@ -90,11 +86,6 @@ if ( model == "QHO" ):
     E_EXACT = 0.500 * dimension
     X = np.linspace( -5,5,2000 )
     PSI_0_EXACT = np.exp( -X**2 / 2 ) + E_EXACT
-elif ( model == "ISW" ):
-    L = 2
-    E_EXACT = np.pi**2 / (2 * L**2)
-    X = np.linspace( -1,1,2000 )
-    PSI_0_EXACT = np.cos( np.pi * X / L ) + E_EXACT
 
 # Compute Observables with DQMC Wavefunction
 NX = len(EDGES)
