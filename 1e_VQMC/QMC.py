@@ -12,7 +12,7 @@ def trial_wavefunction(x1, a):
 
 # Define the local energy function with electron-electron interactions
 def local_energy(x1, a):
-    # H <x|\psi| = E<x|\psi> --> For a single x
+    # (1/\psi (x)) * H \psi_T (x) = E_L --> For a single x
     return 0.5 * x1**2 + a * (1 - 2 * a * x1**2)
 
 # Define the Monte Carlo simulation function
@@ -31,7 +31,7 @@ def monte_carlo_simulation(a, num_samples, num_steps, step_size):
         # Metropolis-Hastings acceptance criterion
         PSI_OLD = trial_wavefunction(x1, a)
         PSI_NEW = trial_wavefunction(x1_new, a)
-        RATIO   = PSI_NEW / (PSI_OLD)
+        RATIO   = PSI_NEW / PSI_OLD
         RAND = np.random.uniform( size=(num_samples) )
         x1 = np.array([ x1_new[w] if RATIO[w] > RAND[w] else x1[w] for w in range(len(x1)) ])
 
