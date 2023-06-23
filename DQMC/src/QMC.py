@@ -23,8 +23,13 @@ def DMC( PARAM, positions=None ):
                 #positions[:,NSTART:NEND,dim]  = np.random.normal(R[dim], 2, size=(particles,NEND-NSTART))
                 positions[:,NSTART:NEND,dim]  = (np.random.uniform(size=(particles,NEND-NSTART))*2-1)*10
 
+        # Initialize Cavity Photon
+        if ( PARAM["CAVITY_FREQ"] is not None ):
+            PARAM["QC"] = np.random.uniform(size=(num_walkers))*2-1 # Assuming only a single dimension # TODO
+
     else:
-        positions = positions
+        positions   = positions
+        PARAM["QC"] = PARAM["QC"]
         num_steps = PARAM["num_steps_production"]
         time_step = PARAM["time_step_production"]
         alpha     = PARAM["alpha_production"]
@@ -47,6 +52,8 @@ def DMC( PARAM, positions=None ):
 
         # Propagate the walkers
         positions += np.random.normal(0, np.sqrt(time_step), size=(particles,len(positions[0,:]),dimension))
+        if ( PARAM["CAVITY_FREQ"] is not None ):
+            PARAM["QC"] += np.random.normal( 0, np.sqrt(time_step), size=( len(positions[0,:]) ) )
 
         # Compute the potential energy for each walker
         potential_energies = get_potential(positions,PARAM)
@@ -57,6 +64,7 @@ def DMC( PARAM, positions=None ):
         #E_TRIAL  = energy_traj[step,0] + alpha * np.log( num_walkers / len(positions[0,:]) )
         
         dE       = potential_energies - E_TRIAL
+
         POW_THRESH = 7 # This is somewhat arbitrary
         if ( (-time_step * dE).any() > POW_THRESH ):
             INDICES = [ j for j,de in enumerate(dE) if (-time_step * de) > POW_THRESH ]
@@ -89,18 +97,27 @@ def DMC( PARAM, positions=None ):
         for p in range( particles ):
             TMP.append( np.repeat( positions[p,:,:], s[:], axis=0 ) )
         positions = np.array(TMP).reshape( (particles,np.sum(s),dimension) )
+        if ( PARAM["CAVITY_FREQ"] is not None ):
+            PARAM["QC"] = np.repeat( PARAM["QC"], s[:] )
 
         if ( len(positions[0]) > 100 ):
             trajectory[:,:,:,step] = positions[:,:100,:]
 
-
         if ( step == 0 ):
-            WFN, EDGES = np.histogram( positions[:,:].flatten(), bins=np.linspace(-10,10,1000) )
+            EL_WFN, EDGES = np.histogram( positions[:,:].flatten(), bins=np.linspace(-10,10,1000) )
+            if ( PARAM["CAVITY_FREQ"] is not None ):
+                PHOT_WFN, _ = np.histogram( PARAM["QC"], bins=np.linspace(-10,10,1000) )
         else:
-            TMP = np.histogram( positions[:,:].flatten(), bins=np.linspace(-10,10,1000) )
-            WFN += TMP[0]
-
-    return positions, trajectory, energy_traj, (EDGES, WFN)
+            TMP     = np.histogram( positions[:,:].flatten(), bins=np.linspace(-10,10,1000) )
+            EL_WFN += TMP[0]
+            if ( PARAM["CAVITY_FREQ"] is not None ):
+                TMP = np.histogram( PARAM["QC"], bins=np.linspace(-10,10,1000) )
+                PHOT_WFN += TMP[0]
+        
+    if ( PARAM["CAVITY_FREQ"] is not None ):
+        return positions, trajectory, energy_traj, (EDGES, EL_WFN, PHOT_WFN), PARAM
+    else:
+        return positions, trajectory, energy_traj, (EDGES, EL_WFN), PARAM
 
 
 

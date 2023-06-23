@@ -6,16 +6,16 @@ from scipy.interpolate import interp1d
 from potential import get_potential
 
 def print_results( positions, energy_traj, PARAM ):
-
     # Print the results
     print("\n\tNumber of Walkers:", len(positions[0,:]))
     print("\n\tNumber of Particles:", len(positions))
-    print("\tAverage position:", np.average( positions, axis=(0,1) ) )
-    print(f"\tAverage energy: {np.average( energy_traj[:,0] )} " )
-    print(f"\tVAR     energy: {np.var( energy_traj[:,0] )} " )
+    print("\tAverage Electronic Position:", np.average( positions, axis=(0,1) ) )
+    if ( PARAM["CAVITY_FREQ"] is not None ):
+        print("\tAverage Photonic Position:", np.average( PARAM["QC"] ) ) # Only 1D for now
+    print(f"\tAverage Energy: {np.average( energy_traj[:,0] )} " )
+    print(f"\tVAR     Energy: {np.var( energy_traj[:,0] )} " )
 
-def plot( positions, TRAJ, energy_traj, PARAM, EDGES, WFN, production_flag=True ):
-
+def plot( positions, TRAJ, energy_traj, PARAM, EDGES, EL_WFN, PHOT_WFN=None, production_flag=True ):
     if ( production_flag == True ):
         OUT_NAME = "Production"
         num_steps = PARAM["num_steps_production"]
@@ -43,25 +43,28 @@ def plot( positions, TRAJ, energy_traj, PARAM, EDGES, WFN, production_flag=True 
     np.savetxt( f"{DATA_DIR}/E_AVE_VAR_STD_{OUT_NAME}.dat", np.array([E_AVE,E_VAR,E_STD]), fmt="%1.8f", header="AVE, VAR, STD (of Energy)" )
 
     # DMQ Result
-    #WFN, EDGES = np.histogram( positions[:,:].flatten(), bins=100 )
+    #EL_WFN, EDGES = np.histogram( positions[:,:].flatten(), bins=100 )
     EDGES = (EDGES[:-1] + EDGES[1:])/2
-    WFN = WFN / np.linalg.norm( WFN)
+    EL_WFN = EL_WFN / np.linalg.norm( EL_WFN)
 
-    # Exact Result
-    E_EXACT = -0.500
-    X = np.linspace( -12,12,5000 )
-    PSI_0_EXACT = np.exp( -np.abs(X) / 2 ) #+ E_EXACT
+    if ( PARAM["CAVITY_FREQ"] is not None ):
+        PHOT_WFN = PHOT_WFN / np.linalg.norm( PHOT_WFN)
 
     # Compute Observables with DQMC Wavefunction
+    X = np.linspace( -12,12,5000 )
     NX = len(EDGES)
     dX = EDGES[1] - EDGES[0]
-    AVE_X  = np.sum( EDGES    * WFN**2 ) * dX
-    AVE_X2 = np.sum( EDGES**2 * WFN**2 ) * dX
+    AVE_X  = np.sum( EDGES    * EL_WFN**2 ) * dX
+    AVE_X2 = np.sum( EDGES**2 * EL_WFN**2 ) * dX
     print( "\t<x> = %1.4f, <x^2> = %1.4f, <x^2>-<x>^2 = %1.4f" % (AVE_X, AVE_X2, AVE_X2 - AVE_X**2 ) )
 
+    if ( PARAM["CAVITY_FREQ"] is not None ):
+        AVE_QC  = np.sum( EDGES    * PHOT_WFN**2 ) * dX
+        AVE_QC2 = np.sum( EDGES**2 * PHOT_WFN**2 ) * dX
+        print( "\t<QC> = %1.4f, <QC^2> = %1.4f, <QC^2>-<QC>^2 = %1.4f" % (AVE_QC, AVE_QC2, AVE_QC2 - AVE_QC**2 ) )
+
     # Plot the Results
-    plt.plot( EDGES, WFN / np.max(WFN) + E_AVE, "-o", c="red", label="DQMQ" )
-    #plt.plot( X, PSI_0_EXACT, label="Exact" )
+    plt.plot( EDGES, EL_WFN / np.max(EL_WFN) + E_AVE, "-o", c="red", label="DQMQ" )
     plt.plot( X, 0.1*get_potential(X,PARAM), label="V(x)/10" )
     MAX_X = np.max( [abs(EDGES[0]),abs(EDGES[-1])] )
     plt.xlim( -2, 2)
@@ -71,6 +74,30 @@ def plot( positions, TRAJ, energy_traj, PARAM, EDGES, WFN, production_flag=True 
     plt.title(f"{dimension} Dimensions; {particles} Particles; Interacting: {interacting}",fontsize=15)
     plt.savefig(f"{DATA_DIR}/WAVEFUNCTION_d{dimension}_N{particles}_INT_{interacting}_{OUT_NAME}.jpg",dpi=300)
     plt.clf()
+
+    if ( PARAM["CAVITY_FREQ"] is not None ):
+        # Plot the Results
+        QC_GRID = np.linspace( -4/PARAM["CAVITY_FREQ"], 4/PARAM["CAVITY_FREQ"],5000 )
+        plt.plot( EDGES, PHOT_WFN / np.max(PHOT_WFN), "-o", c="red", label="DQMQ" )
+        plt.plot( QC_GRID, 0.5 * PARAM["CAVITY_FREQ"]**2 * QC_GRID**2, label="V(QC)" )
+        MAX_X = np.max( [abs(EDGES[0]),abs(EDGES[-1])] )
+        plt.xlim( QC_GRID[0], QC_GRID[-1])
+        plt.ylim( -0.5,2 )
+        plt.xlabel("Position, QC",fontsize=15)
+        plt.ylabel("Wavefunction / Potential Energy",fontsize=15)
+        plt.title(f"{dimension} Dimensions; {particles} Particles; Interacting: {interacting}",fontsize=15)
+        plt.savefig(f"{DATA_DIR}/PHOTON_WAVEFUNCTION_d{dimension}_N{particles}_INT_{interacting}_{OUT_NAME}.jpg",dpi=300)
+        plt.clf()
+
+        # # Plot the photonic trajectory
+        # plt.plot( PARAM["QC"][:], np.arange(num_steps)[::-1], "-o" )
+        # plt.xlim( -12,12 )
+        # plt.xlabel("Photinic Position, QC",fontsize=15)
+        # plt.legend()
+        # plt.ylabel("Simulation Step",fontsize=15)
+        # plt.title(f"{dimension} Dimensions; {particles} Particles; Interacting: {interacting}",fontsize=15)
+        # plt.savefig(f"{DATA_DIR}/PHOTON_TRAJECTORY_d{dimension}_N{particles}_INT_{interacting}_{OUT_NAME}.jpg",dpi=300)
+        # plt.clf()
 
     # Plot the trajectory
     for p in range(particles):
