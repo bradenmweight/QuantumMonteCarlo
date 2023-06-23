@@ -24,16 +24,16 @@ def DMC( PARAM, positions=None ):
                 positions[:,NSTART:NEND,dim]  = (np.random.uniform(size=(particles,NEND-NSTART))*2-1)*10
 
         # Initialize Cavity Photon
-        if ( PARAM["CAVITY_FREQ"] is not None ):
+        if ( PARAM["DO_POLARITON"] == True ):
             PARAM["QC"] = np.random.uniform(size=(num_walkers))*2-1 # Assuming only a single dimension # TODO
 
     else:
-        positions   = positions
-        PARAM["QC"] = PARAM["QC"]
+        positions = positions
         num_steps = PARAM["num_steps_production"]
         time_step = PARAM["time_step_production"]
         alpha     = PARAM["alpha_production"]
-
+        if ( PARAM["DO_POLARITON"] == True ):
+            PARAM["QC"] = PARAM["QC"]
 
     trajectory  = np.zeros( (particles,100,dimension,num_steps) ) # Store first 100 walker for visualization
     energy_traj = np.zeros( (num_steps,3) )
@@ -52,7 +52,7 @@ def DMC( PARAM, positions=None ):
 
         # Propagate the walkers
         positions += np.random.normal(0, np.sqrt(time_step), size=(particles,len(positions[0,:]),dimension))
-        if ( PARAM["CAVITY_FREQ"] is not None ):
+        if ( PARAM["DO_POLARITON"] == True ):
             PARAM["QC"] += np.random.normal( 0, np.sqrt(time_step), size=( len(positions[0,:]) ) )
 
         # Compute the potential energy for each walker
@@ -97,7 +97,7 @@ def DMC( PARAM, positions=None ):
         for p in range( particles ):
             TMP.append( np.repeat( positions[p,:,:], s[:], axis=0 ) )
         positions = np.array(TMP).reshape( (particles,np.sum(s),dimension) )
-        if ( PARAM["CAVITY_FREQ"] is not None ):
+        if ( PARAM["DO_POLARITON"] == True ):
             PARAM["QC"] = np.repeat( PARAM["QC"], s[:] )
 
         if ( len(positions[0]) > 100 ):
@@ -105,16 +105,16 @@ def DMC( PARAM, positions=None ):
 
         if ( step == 0 ):
             EL_WFN, EDGES = np.histogram( positions[:,:].flatten(), bins=np.linspace(-10,10,1000) )
-            if ( PARAM["CAVITY_FREQ"] is not None ):
+            if ( PARAM["DO_POLARITON"] == True ):
                 PHOT_WFN, _ = np.histogram( PARAM["QC"], bins=np.linspace(-10,10,1000) )
         else:
             TMP     = np.histogram( positions[:,:].flatten(), bins=np.linspace(-10,10,1000) )
             EL_WFN += TMP[0]
-            if ( PARAM["CAVITY_FREQ"] is not None ):
+            if ( PARAM["DO_POLARITON"] == True ):
                 TMP = np.histogram( PARAM["QC"], bins=np.linspace(-10,10,1000) )
                 PHOT_WFN += TMP[0]
         
-    if ( PARAM["CAVITY_FREQ"] is not None ):
+    if ( PARAM["DO_POLARITON"] == True ):
         return positions, trajectory, energy_traj, (EDGES, EL_WFN, PHOT_WFN), PARAM
     else:
         return positions, trajectory, energy_traj, (EDGES, EL_WFN), PARAM

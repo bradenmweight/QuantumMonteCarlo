@@ -39,7 +39,7 @@ def get_potential(x, PARAM):
                         V_NUC += Z_NUC[Ri1] * Z_NUC[Ri2] / R12
 
         # Photonic Cavity Contributions
-        if ( PARAM["CAVITY_FREQ"] is not None ):
+        if ( PARAM["DO_POLARITON"] == True ):
             WC     = PARAM["CAVITY_FREQ"] 
             A0     = PARAM["CAVITY_COUPLING"]
             EPOL   = PARAM["CAVITY_POLARIZATION"]

@@ -3,53 +3,48 @@ import sys
 import os
 
 from output import print_results, plot
-from potential import get_potential
 from QMC import DMC
 
-def check_for_polaritons( PARAM ):
+def get_polariton_parameters( PARAM, ARGS ):
 
-    try:
-        WC = PARAM["CAVITY_FREQ"]
-        print("\n\tAdding polaritonic contributions.")
-        print(f"\tWC   = {PARAM['CAVITY_FREQ']}")
-        print(f"\tA0   = {PARAM['CAVITY_COUPLING']}")
-        print(f"\tEPOL = {PARAM['CAVITY_POLARIZATION']}")
-    except KeyError:
-        PARAM["CAVITY_FREQ"] = None
-    return PARAM
+    if ( PARAM["DO_POLARITON"] == True ):
 
-def get_PARAMS( ):
+        if ( len(ARGS) == 3 ):
+            try:
+                PARAM["CAVITY_COUPLING"] = float( ARGS[1] ) #A0 # a.u.
+                PARAM["CAVITY_FREQ"]     = float( ARGS[2] ) # a.u.
+                PARAM["DATA_DIR"]       += "_A0_%1.3f_WC_%1.3f" % (PARAM["CAVITY_COUPLING"], PARAM["CAVITY_FREQ"] )
+            except:
+                print("\n\tERROR!!! Something wrong with cavity parameters.\n")
+                print( f"\t\tCoupling Strength: '{ARGS[1]}'\n\t\tCavity Frequency: '{ARGS[2]}'" )
+                exit()
+        else:
+            print("\n\tWARNING!!! 'DO_POLARITON' was set to True but no parameters specified.")
+            print("\tSetting cavity freqency and coupling to zero.\n")
+            PARAM["CAVITY_COUPLING"] = 0.0 #A0 # a.u.
+            PARAM["CAVITY_FREQ"]     = 0.0 # a.u.
+        
+        # Normalize this thing...so user can do whatever they want
+        PARAM["CAVITY_POLARIZATION"] = PARAM["CAVITY_POLARIZATION"] / np.linalg.norm(PARAM["CAVITY_POLARIZATION"])
 
-    PARAM = get_Parameters( sys.argv[1:] )
+    print( f"\t\tCoupling Strength: {PARAM['CAVITY_COUPLING']} a.u.\n\t\tCavity Frequency: {PARAM['CAVITY_FREQ']} a.u.\n\t\tCavity Polarization: {PARAM['CAVITY_POLARIZATION']}" )
+    exit()
     return PARAM
 
 def main():
 
-    PARAM = get_PARAMS( )
-    PARAM = check_for_polaritons( PARAM )
-    
+    PARAM = get_Parameters( sys.argv[1:] )
+    PARAM = get_polariton_parameters( PARAM, sys.argv[1:] ) # Check for polariton calculation and set parameters
 
-    if ( PARAM["CAVITY_FREQ"] is not None ):
-        # Do equilibrium run
-        positions, TRAJ, energy_traj, (EDGES, EL_WFN, PHOT_WFN), PARAM = DMC(PARAM) # This can be very easily parallelized.
-        print_results( positions, energy_traj, PARAM )
-        plot(positions, TRAJ, energy_traj, PARAM, EDGES, EL_WFN, PHOT_WFN, production_flag=False)
+    # Do equilibrium run
+    positions, TRAJ, energy_traj, WFNs, PARAM = DMC(PARAM) # This can be very easily parallelized.
+    print_results( positions, energy_traj, PARAM )
+    plot(positions, TRAJ, energy_traj, PARAM, WFNs, production_flag=False)
 
-        # Do production run starting from equilibrated positions
-        positions, TRAJ, energy_traj, (EDGES, EL_WFN, PHOT_WFN), PARAM = DMC(PARAM,positions=positions) # This can be very easily parallelized.
-        print_results( positions, energy_traj, PARAM )
-        plot(positions, TRAJ, energy_traj, PARAM, EDGES, EL_WFN, PHOT_WFN=PHOT_WFN, production_flag=True)
-
-    else:
-        # Do equilibrium run
-        positions, TRAJ, energy_traj, (EDGES, WFN), PARAM = DMC(PARAM) # This can be very easily parallelized.
-        print_results( positions, energy_traj, PARAM )
-        plot(positions, TRAJ, energy_traj, PARAM, EDGES, WFN, production_flag=False)
-
-        # Do production run starting from equilibrated positions
-        positions, TRAJ, energy_traj, (EDGES, WFN), PARAM = DMC(PARAM,positions=positions) # This can be very easily parallelized.
-        print_results( positions, energy_traj, PARAM )
-        plot(positions, TRAJ, energy_traj, PARAM, EDGES, WFN, production_flag=True)
+    # Do production run starting from equilibrated positions
+    positions, TRAJ, energy_traj, WFNs, PARAM = DMC(PARAM,positions=positions) # This can be very easily parallelized.
+    print_results( positions, energy_traj, PARAM )
+    plot(positions, TRAJ, energy_traj, PARAM, WFNs, production_flag=True)
 
 if ( __name__ == "__main__" ):
     sys.path.append( os.getcwd() )
