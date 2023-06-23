@@ -330,3 +330,188 @@ Step = 4500, N = 36066
 No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+
+	Adding polaritonic contributions.
+	WC   = 0.1102479108020903
+	A0   = 0.7
+	EPOL = [0. 1. 0.]
+Step = 0, N = 100000
+Step = 500, N = 6815
+Step = 1000, N = 27041
+Step = 1500, N = 86844
+Step = 2000, N = 279704
+Step = 2500, N = 608062
+Step = 3000, N = 1102685
+Step = 3500, N = 1530937
+Step = 4000, N = 1445455
+Step = 4500, N = 1073492
+
+	Number of Walkers: 694229
+
+	Number of Particles: 2
+	Average Electronic Position: [ 0.0110046  -0.00053171  0.01403233]
+	Average Photonic Position: -0.00580642746482214
+	Average Energy: -0.8197539400984651 
+	VAR     Energy: 0.7422144333017611 
+	<x> = 0.0000, <x^2> = 0.0216, <x^2>-<x>^2 = 0.0216
+	<QC> = 0.0003, <QC^2> = 0.0890, <QC^2>-<QC>^2 = 0.0890
+Step = 0, N = 694229
+Step = 500, N = 617288
+Step = 1000, N = 453247
+Step = 1500, N = 303562
+Step = 2000, N = 190216
+Step = 2500, N = 121204
+Step = 3000, N = 74632
+Step = 3500, N = 52550
+Step = 4000, N = 41407
+Step = 4500, N = 35018
+
+	Number of Walkers: 32826
+
+	Number of Particles: 2
+	Average Electronic Position: [-0.00269045  0.0004053  -0.00847529]
+	Average Photonic Position: -0.07277070727069516
+	Average Energy: -0.8766249346502831 
+	VAR     Energy: 7.731308941105415e-05 
+	<x> = 0.0000, <x^2> = 0.0203, <x^2>-<x>^2 = 0.0203
+	<QC> = -0.0000, <QC^2> = 0.0907, <QC^2>-<QC>^2 = 0.0907
+No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+
+	Adding polaritonic contributions.
+	WC   = 0.1102479108020903
+	A0   = 0.6
+	EPOL = [0. 1. 0.]
+Step = 0, N = 100000
+Step = 500, N = 7571
+Step = 1000, N = 24021
+Step = 1500, N = 83853
+Step = 2000, N = 249055
+Step = 2500, N = 586318
+Step = 3000, N = 1092735
+Step = 3500, N = 1593066
+Step = 4000, N = 1631437
+Step = 4500, N = 1337254
+
+	Number of Walkers: 825904
+
+	Number of Particles: 2
+	Average Electronic Position: [ 0.01911753  0.01036412 -0.03245933]
+	Average Photonic Position: 0.07070142388468184
+	Average Energy: -0.834937838519883 
+	VAR     Energy: 0.4404367178099485 
+	<x> = 0.0000, <x^2> = 0.0230, <x^2>-<x>^2 = 0.0230
+	<QC> = 0.0026, <QC^2> = 0.0899, <QC^2>-<QC>^2 = 0.0899
+Step = 0, N = 825904
+Step = 500, N = 734111
+Step = 1000, N = 552271
+Step = 1500, N = 371343
+Step = 2000, N = 229185
+Step = 2500, N = 136554
+Step = 3000, N = 80258
+Step = 3500, N = 50351
+Step = 4000, N = 37269
+Step = 4500, N = 31831
+
+	Number of Walkers: 30388
+
+	Number of Particles: 2
+	Average Electronic Position: [-0.00045745 -0.00969504 -0.00067138]
+	Average Photonic Position: 0.039725861910147514
+	Average Energy: -0.8942072062826132 
+	VAR     Energy: 7.977886382900526e-05 
+	<x> = -0.0000, <x^2> = 0.0214, <x^2>-<x>^2 = 0.0214
+	<QC> = 0.0000, <QC^2> = 0.0904, <QC^2>-<QC>^2 = 0.0904
+No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+
+	Adding polaritonic contributions.
+	WC   = 0.1102479108020903
+	A0   = 0.8
+	EPOL = [0. 1. 0.]
+Step = 0, N = 100000
+Step = 500, N = 5345
+Step = 1000, N = 21990
+Step = 1500, N = 100276
+Step = 2000, N = 315531
+Step = 2500, N = 743076
+Step = 3000, N = 1224883
+Step = 3500, N = 1387625
+Step = 4000, N = 1265026
+Step = 4500, N = 918915
+
+	Number of Walkers: 591414
+
+	Number of Particles: 2
+	Average Electronic Position: [ 0.03102911 -0.00077289  0.00129449]
+	Average Photonic Position: -0.1447835770303074
+	Average Energy: -0.7852702091797957 
+	VAR     Energy: 1.220750610537178 
+	<x> = -0.0001, <x^2> = 0.0212, <x^2>-<x>^2 = 0.0212
+	<QC> = 0.0044, <QC^2> = 0.0911, <QC^2>-<QC>^2 = 0.0911
+Step = 0, N = 591414
+Step = 500, N = 507147
+Step = 1000, N = 408549
+Step = 1500, N = 310078
+Step = 2000, N = 215549
+Step = 2500, N = 143871
+Step = 3000, N = 97790
+Step = 3500, N = 73768
+Step = 4000, N = 57067
+Step = 4500, N = 44731
+
+	Number of Walkers: 41295
+
+	Number of Particles: 2
+	Average Electronic Position: [0.0117899  0.00441242 0.00510403]
+	Average Photonic Position: -0.043195361247625394
+	Average Energy: -0.8592605853337795 
+	VAR     Energy: 6.0828419772475265e-05 
+	<x> = 0.0000, <x^2> = 0.0192, <x^2>-<x>^2 = 0.0192
+	<QC> = 0.0000, <QC^2> = 0.0910, <QC^2>-<QC>^2 = 0.0910
+No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+
+	Adding polaritonic contributions.
+	WC   = 0.1102479108020903
+	A0   = 1.0
+	EPOL = [0. 1. 0.]
+Step = 0, N = 100000
+Step = 500, N = 4526
+Step = 1000, N = 20623
+Step = 1500, N = 85565
+Step = 2000, N = 232851
+Step = 2500, N = 536582
+Step = 3000, N = 896345
+Step = 3500, N = 1094890
+Step = 4000, N = 1028077
+Step = 4500, N = 794520
+
+	Number of Walkers: 515270
+
+	Number of Particles: 2
+	Average Electronic Position: [ 0.00235906 -0.00045119  0.01043387]
+	Average Photonic Position: -0.05032297738821124
+	Average Energy: -0.7525799446795166 
+	VAR     Energy: 2.8990867154255393 
+	<x> = 0.0000, <x^2> = 0.0189, <x^2>-<x>^2 = 0.0189
+	<QC> = -0.0037, <QC^2> = 0.0829, <QC^2>-<QC>^2 = 0.0829
+Step = 0, N = 515270
+Step = 500, N = 461636
+Step = 1000, N = 392386
+Step = 1500, N = 274879
+Step = 2000, N = 173621
+Step = 2500, N = 113137
+Step = 3000, N = 80047
+Step = 3500, N = 61252
+Step = 4000, N = 50072
+Step = 4500, N = 42998
+
+	Number of Walkers: 41609
+
+	Number of Particles: 2
+	Average Electronic Position: [-0.00498397  0.00420896 -0.0043693 ]
+	Average Photonic Position: -0.008358517361120456
+	Average Energy: -0.8135339424375523 
+	VAR     Energy: 7.432934182341364e-05 
+	<x> = -0.0000, <x^2> = 0.0175, <x^2>-<x>^2 = 0.0175
+	<QC> = -0.0008, <QC^2> = 0.0902, <QC^2>-<QC>^2 = 0.0902
