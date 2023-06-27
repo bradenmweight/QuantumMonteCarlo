@@ -25,7 +25,7 @@ def DMC( PARAM, positions=None ):
 
         # Initialize Cavity Photon
         if ( PARAM["DO_POLARITON"] == True ):
-            PARAM["QC"] = np.random.uniform(size=(num_walkers))*2-1 # Assuming only a single dimension # TODO
+            PARAM["QC"] = np.random.uniform(size=(num_walkers))*2-1 # Assuming only a single dimension/mode # TODO
 
     else:
         positions = positions
@@ -104,14 +104,22 @@ def DMC( PARAM, positions=None ):
             trajectory[:,:,:,step] = positions[:,:100,:]
 
         if ( step == 0 ):
-            EL_WFN, EDGES = np.histogram( positions[:,:].flatten(), bins=np.linspace(-10,10,1000) )
+            NEDGES = 1000
+            XMIN   = np.min( R_NUC[:,:]*5 )
+            XMAX   = np.max( R_NUC[:,:]*5 )
+            XMAX   = np.max( [abs(XMIN),XMAX] )
+            XMIN   = -XMAX
+            EL_WFN = np.zeros( ( NEDGES, dimension ) )
+            for d in range( dimension ):
+                EL_WFN[:,d], EDGES = np.histogram( positions[:,:,d].flatten(), bins=np.linspace(XMIN,XMAX,NEDGES+1) )
             if ( PARAM["DO_POLARITON"] == True ):
-                PHOT_WFN, _ = np.histogram( PARAM["QC"], bins=np.linspace(-10,10,1000) )
+                PHOT_WFN, _ = np.histogram( PARAM["QC"], bins=np.linspace(XMIN,XMAX,NEDGES+1) )
         else:
-            TMP     = np.histogram( positions[:,:].flatten(), bins=np.linspace(-10,10,1000) )
-            EL_WFN += TMP[0]
+            for d in range( dimension ):
+                TMP     = np.histogram( positions[:,:,d].flatten(), bins=np.linspace(XMIN,XMAX,NEDGES+1) )
+                EL_WFN[:,d] += TMP[0]
             if ( PARAM["DO_POLARITON"] == True ):
-                TMP = np.histogram( PARAM["QC"], bins=np.linspace(-10,10,1000) )
+                TMP = np.histogram( PARAM["QC"], bins=np.linspace(XMIN,XMAX,NEDGES+1) )
                 PHOT_WFN += TMP[0]
         
     if ( PARAM["DO_POLARITON"] == True ):

@@ -92,7 +92,9 @@ def get_potential(x, PARAM):
             return V_EL + V_NUC
     
     else:
-        V = x*0
-        for Ri, R, in enumerate( R_NUC ):
-            V += -Z_NUC[Ri]/np.abs(x-R[0]) # Only Electron-Nuclei Interaction in dim = 0
+        dimension = len(R_NUC[0,:])
+        V = np.zeros( (len(x), dimension) )
+        for d in range( dimension ): # Dimension
+            for Ri, R, in enumerate( R_NUC ):
+                V[:,d] += -Z_NUC[Ri]/np.abs(x-R[d]) # Only Electron-Nuclei Interaction in dim = d
         return V
