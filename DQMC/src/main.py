@@ -28,7 +28,7 @@ def get_polariton_parameters( PARAM, ARGS ):
         # Normalize this thing...so user can do whatever they want
         PARAM["CAVITY_POLARIZATION"] = PARAM["CAVITY_POLARIZATION"] / np.linalg.norm(PARAM["CAVITY_POLARIZATION"])
 
-    print( f"\t\tCoupling Strength: {round(PARAM['CAVITY_COUPLING'],3)} a.u.\n\t\tCavity Frequency: {round(PARAM['CAVITY_FREQ']*27.2114,3)} e.V.\n\t\tCavity Polarization: {PARAM['CAVITY_POLARIZATION']}" )
+        print( f"\t\tCoupling Strength: {round(PARAM['CAVITY_COUPLING'],3)} a.u.\n\t\tCavity Frequency: {round(PARAM['CAVITY_FREQ']*27.2114,3)} e.V.\n\t\tCavity Polarization: {PARAM['CAVITY_POLARIZATION']}" )
     
     return PARAM
 
@@ -42,7 +42,7 @@ def main():
     print_results( positions, energy_traj, PARAM )
     plot(positions, TRAJ, energy_traj, PARAM, WFNs, production_flag=False)
 
-    # Do production run starting from equilibrated positions
+    # Do production run starting from equilibrated wavefunction
     positions, TRAJ, energy_traj, WFNs, PARAM = DMC(PARAM,positions=positions) # This can be very easily parallelized.
     print_results( positions, energy_traj, PARAM )
     plot(positions, TRAJ, energy_traj, PARAM, WFNs, production_flag=True)

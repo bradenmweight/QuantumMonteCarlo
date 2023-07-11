@@ -1,0 +1,26 @@
+#!/bin/bash
+#SBATCH -p action
+#SBATCH -J scQED_CCSD
+#SBATCH -o output.slurm
+#SBATCH -t 30-00:00:00
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=24
+#SBATCH --mem 60GB
+
+export OMP_NUM_THREADS=24 # ADD THIS TO PYTHON FILE # TODO ~ BMW
+export MKL_NUM_THREADS=24
+
+# Choose level of CC
+export LEVEL="CCSD-S2-U22" # "CCSD-S0-U20", "CCSD-S1-U21", "CCSD-S2-U12", "CCSD-S2-U22"
+export WC=20.0 # eV
+export A0=0.2 # a.u.
+export LAMBDA=$( echo "$A0*sqrt(2*$WC/27.2114)" | bc -l ) # lambda = A_0*sqrt(2 wc)
+export E_POL="100" # Three positive integers
+
+for Rx in {40..600..5}; do # Separation perpendicular to cavity polarization
+    R=$( echo "$Rx*0.01" | bc -l )
+    echo ${LEVEL} ${WC} ${LAMBDA} ${E_POL} ${R}
+    python3 ../scQED_CCSD_Sn_U2n.py ${LEVEL} ${WC} ${LAMBDA} ${E_POL} ${R} > OUTPUT_${LEVEL}_WC_${WC}_LAMBDA_${LAMBDA}_EPOL_${E_POL}_${Rx}.out
+done
+
+rm psi* output* timer*
