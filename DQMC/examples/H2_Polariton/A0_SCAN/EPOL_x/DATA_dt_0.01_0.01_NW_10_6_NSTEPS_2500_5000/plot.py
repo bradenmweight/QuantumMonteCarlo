@@ -3,10 +3,10 @@ from matplotlib import pyplot as plt
 from scipy.interpolate import interp1d
 
 R_LIST  = np.arange( 0.2, 6.0+0.2, 0.2 )
-A0_LIST = np.arange( 0.0, 0.5+0.1, 0.1 )# np.arange( 0.0, 1.0+0.1, 0.1 )
+A0_LIST = np.arange( 0.0, 1.0+0.1, 0.1 ) # np.arange( 0.0, 0.5+0.1, 0.1 )
 WC_LIST = np.arange( 5.0, 20.0+5.0, 5.0 )
 
-color_list = ["black", 'red', 'green', 'purple', 'blue', 'orange', 'gray']
+color_list = ["black", 'red', 'green', 'purple', 'blue', 'orange', 'gray', 'magenta', 'cyan', 'limegreen', 'chocolate']
 
 R_LIST = np.append( R_LIST, 30.0 )
 
@@ -65,6 +65,12 @@ for WCi,WC in enumerate( WC_LIST ):
     plt.clf()
     np.savetxt( f"PES_{TYPE}_WC_{WC_eV}.dat", np.c_[R_LIST[:], E[:,:,WCi]] )
     np.savetxt( f"PES_{TYPE}_WC_{WC_eV}_ERROR.dat", np.c_[R_LIST[:], STD[:,:,WCi]] )
+    OUT = []
+    OUT.append(R_LIST)
+    for A0i,A0 in enumerate( A0_LIST ):
+        OUT.append( E[:,A0i,WCi] )
+        OUT.append( STD[:,A0i,WCi] )
+    np.savetxt( f"PES_{TYPE}_WC_{WC_eV}_ERROR_BOTH.dat", np.array(OUT).T )
 
     for A0i,A0 in enumerate( A0_LIST ):
         plt.plot( R_LIST[:], E[:,A0i,WCi] - E[:,0,WCi], "-o", c=color_list[A0i], label="A0 = %1.1f" % A0 )
@@ -90,7 +96,12 @@ for WCi,WC in enumerate( WC_LIST ):
 
     np.savetxt( f"PES_DIFF_{TYPE}_WC_{WC_eV}.dat", np.c_[R_LIST[:], DIFF_PES[:,:,WCi]] )
     np.savetxt( f"PES_DIFF_{TYPE}_WC_{WC_eV}_ERROR.dat", np.c_[R_LIST[:], DIFF_PES_ERROR[:,:,WCi]] )
-
+    OUT = []
+    OUT.append(R_LIST)
+    for A0i,A0 in enumerate( A0_LIST ):
+        OUT.append( DIFF_PES[:,A0i,WCi] )
+        OUT.append( DIFF_PES_ERROR[:,A0i,WCi] )
+    np.savetxt( f"PES_DIFF_{TYPE}_WC_{WC_eV}_ERROR_BOTH.dat", np.array(OUT).T )
 
 
 
@@ -117,7 +128,7 @@ for WCi,WC in enumerate( WC_LIST ):
 
 ### INTERPOLATE AND FIND LOCATION OF MINIMA OF PES ###
 
-R_FINE = np.linspace( 1.0, 1.5, 10**2 )
+R_FINE = np.linspace( 1.0, 1.5, 10**4 )
 for WCi,WC in enumerate( WC_LIST ):
     R_min = []
     STD_min = []
@@ -146,17 +157,20 @@ plt.clf()
 Ri = ([ j for j in range(len(R_LIST)) if R_LIST[j] == 1.6 ])[0]
 for WCi,WC in enumerate( WC_LIST ):
     E_ZPE = E[Ri,0,WCi] # 0.5 * WC/27.2114
-    plt.plot( A0_LIST[:], E[Ri,:,WCi] - E_ZPE, "-o", c=color_list[WCi], label="WC = %2.1f eV" % WC )
-    plt.plot( A0_LIST[:], E[Ri,:,WCi] - STD[Ri,:,WCi] - E_ZPE, "_", c=color_list[WCi], alpha=0.75 )#, label="$\pm\sqrt{\langle (\Delta E)^2 \\rangle}$" )
-    plt.plot( A0_LIST[:], E[Ri,:,WCi] + STD[Ri,:,WCi] - E_ZPE, "_", c=color_list[WCi], alpha=0.75 )
+    plt.plot( A0_LIST[:], E[Ri,:,WCi] - E[Ri,0,WCi], "-o", c=color_list[WCi], label="WC = %2.1f eV" % WC )
+    plt.plot( A0_LIST[:], E[Ri,:,WCi] - STD[Ri,:,WCi] - E[Ri,0,WCi], "_", c=color_list[WCi], alpha=0.75 )#, label="$\pm\sqrt{\langle (\Delta E)^2 \\rangle}$" )
+    plt.plot( A0_LIST[:], E[Ri,:,WCi] + STD[Ri,:,WCi] - E[Ri,0,WCi], "_", c=color_list[WCi], alpha=0.75 )
+    np.savetxt( f"A0SCAN_{TYPE}_WC_{WC}.dat", np.c_[ A0_LIST, E[Ri,:,WCi] - E_ZPE, STD[Ri,:,WCi] ] )
+
 plt.legend()
 plt.xlim(A0_LIST[0],A0_LIST[-1])
 plt.xlabel("Coupling Strength, $A_0$ (a.u.)",fontsize=15)
-plt.ylabel("$E_{QED-CC}$ - $E_{ZPE}$ (a.u.)",fontsize=15)
+plt.ylabel("$E(A_0)$ - $E(0)$ (a.u.)",fontsize=15)
 plt.title("$R_{LiH}$"+" = %1.1f A" % R_LIST[Ri],fontsize=15)
 plt.tight_layout()
 plt.savefig(f"A0SCAN_{TYPE}_WC.jpg",dpi=400)
 plt.clf()
+
 
 
 
