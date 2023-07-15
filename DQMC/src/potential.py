@@ -53,18 +53,13 @@ def get_potential(x, PARAM):
             MU_NUC      = np.einsum("N,Nd->d", Z_NUC[:], R_NUC[:,:] ) # Sum over nuclei
             MU_EL       = np.einsum("ewd->wd", x[:,:,:] ) # Sum over electrons
             
-            
-            #### BUG !!!! THIS IS A MULTIPLICATION, NOT A SUMMATION ~ BMW
-            #### MU_TOT = np.einsum("wd,wd->wd", MU_NUC[None,:], -1.0000 * MU_EL[:,:]) # (w,d)
-            
-            #MU_TOT = np.zeros( (len(x[0,:]),len(x[0,0,:])) ) # (w,d)
-            #for w in range( len(x[0,:]) ):
-            #    for d in range( len(x[0,0,:]) ):
-            #        MU_TOT[w,d] = MU_NUC[d] - MU_EL[w,d]
             MU_TOT = MU_NUC[:] - MU_EL[:,:]
 
             MU_TOT_PROJ = np.einsum( "wd,d->w", MU_TOT, EPOL ) # Project along field polarization
             V_elph      = np.sqrt(2 * WC**3) * A0 * MU_TOT_PROJ[:] * QC[:] # QC = 1/sqrt(2WC) * ( a.T + a )
+
+
+            """
 
             ### DIPOLE SELF-ENERGY ###
             # mu**2 = T1 + T2 + T3
@@ -95,6 +90,11 @@ def get_potential(x, PARAM):
 
             MU_2 = T1 + T2 + T3
             V_DSE = WC * A0**2 * MU_2
+
+            """
+            V_DSE = WC * A0**2 * MU_TOT_PROJ**2
+
+
 
             return V_EL + V_NUC + V_PH + V_elph + V_DSE
 
