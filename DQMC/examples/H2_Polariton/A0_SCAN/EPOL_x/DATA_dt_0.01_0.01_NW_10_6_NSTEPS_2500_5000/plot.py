@@ -18,6 +18,8 @@ STD     = np.zeros( (len(R_LIST), len(A0_LIST), len(WC_LIST)) )
 X_AVE   = np.zeros( (len(R_LIST), len(A0_LIST), len(WC_LIST)) )
 X2_AVE  = np.zeros( (len(R_LIST), len(A0_LIST), len(WC_LIST)) )
 Ld      = np.zeros( (len(R_LIST), len(A0_LIST), len(WC_LIST)) )
+NFOCK   = 10
+PHOTON_WFN_FOCK_BASIS = np.zeros( (len(R_LIST), len(A0_LIST), len(WC_LIST), NFOCK) )
 
 for Ri,R in enumerate( R_LIST ):
     for A0i,A0 in enumerate( A0_LIST ):
@@ -25,19 +27,24 @@ for Ri,R in enumerate( R_LIST ):
             try:
                 TMP1 = open("DATA_DATA_R_%1.3f_A0_%1.4f_WC_%1.4f/E_AVE_VAR_STD_%s.dat" % (R,A0,WC,TYPE),"r").readlines()
                 TMP2 = np.loadtxt("DATA_DATA_R_%1.3f_A0_%1.4f_WC_%1.4f/X_AVE_VAR_STD_Ld_%s.dat" % (R,A0,WC,TYPE))
+                TMP3 = np.loadtxt("DATA_DATA_R_%1.3f_A0_%1.4f_WC_%1.4f/PHOTON_WAVEFUNCTION_FOCK_BASIS_%s.dat" % (R,A0,WC,TYPE))
                 #print(Ri,A0i,WCi)
             except FileNotFoundError:
                 TMP1 = [float("Nan")]*4
                 TMP2 = np.array([[float("Nan"),float("Nan")]*3])
-                #print("DATA_DATA_R_%1.4f_A0_%1.4f_WC_%1.4f/E_AVE_VAR_STD_%s.dat" % (R,A0,WC,TYPE))
-                #print( "NAN",Ri,A0i,WCi )
-            E[Ri,A0i,WCi]      = float(TMP1[1])
-            VAR[Ri,A0i,WCi]    = float(TMP1[2])
-            STD[Ri,A0i,WCi]    = float(TMP1[3])
+                TMP3 = np.array([[float("Nan"),float("Nan")]*NFOCK])
 
-            X_AVE[Ri,A0i,WCi]  = float(TMP2[0,0])
-            X2_AVE[Ri,A0i,WCi] = float(TMP2[0,1])
-            Ld[Ri,A0i,WCi]     = float(TMP2[0,2])
+            E[Ri,A0i,WCi]   = float(TMP1[1])
+            VAR[Ri,A0i,WCi] = float(TMP1[2])
+            STD[Ri,A0i,WCi] = float(TMP1[3])
+
+            X_AVE[Ri,A0i,WCi]                 = float(TMP2[0,0])
+            X2_AVE[Ri,A0i,WCi]                = float(TMP2[0,1])
+            Ld[Ri,A0i,WCi]                    = float(TMP2[0,2])
+            PHOTON_WFN_FOCK_BASIS[Ri,A0i,WCi,:] = np.array(TMP3[:,1]).astype(float)
+
+
+"""
 
 for WCi,WC in enumerate( WC_LIST ):
 
@@ -203,3 +210,27 @@ for WCi,WC in enumerate( WC_LIST ):
     for A0i,A0 in enumerate( A0_LIST ):
         DIFF_Ld[:,A0i,WCi] = Ld[:,A0i,WCi] - Ld[:,0,WCi]
     np.savetxt( f"Ld_DIFF_A0SCAN_{TYPE}_WC_{round(WC)}.dat", np.c_[ R_LIST, DIFF_Ld[:,:,WCi] ] )
+
+"""
+
+
+R_FINE = np.linspace( 0.4, 6.0, 10**4 )
+AVE_N       = np.zeros( (len(R_LIST), len(A0_LIST), len(WC_LIST)) )
+AVE_N_MAX_R = np.zeros( (len(A0_LIST), len(WC_LIST)) )
+for WCi,WC in enumerate( WC_LIST ):
+    for A0i,A0 in enumerate( A0_LIST ):
+        AVE_N[:,A0i,WCi]       = (1/NFOCK)*np.einsum( "n,rn->r", np.arange(NFOCK), PHOTON_WFN_FOCK_BASIS[:,A0i,WCi,:] ) # np.average( np.arange(NFOCK) * PHOTON_WFN_FOCK_BASIS[:,A0i,WCi,:], axis=-1 )
+        fn                     = interp1d( R_LIST[1:-1], AVE_N[1:-1,A0i,WCi], kind="cubic" )
+        AVE_N_MAX_R[A0i,WCi]   = R_FINE[ np.argmax( fn(R_FINE) ) ]
+        plt.plot( R_LIST, AVE_N[:,A0i,WCi], lw=4, label=f"A0 = {round(A0,2)}" )
+        #plt.plot( R_FINE, fn(R_FINE), lw=2, label=f"A0 = {round(A0,2)}" )
+    
+    plt.legend()
+    plt.xlim(R_LIST[0],R_LIST[-2])
+    plt.xlabel("H-H Bond Length, R$_\mathrm{HH}$ (a.u.)",fontsize=15)
+    plt.ylabel("Average Photon Number, $\langle \hat{a}^\dag\hat{a} \\rangle$",fontsize=15)
+    plt.tight_layout()
+    plt.savefig(f"PHOT_WFN_FOCK_BASIS_{TYPE}_WC_{round(WC)}.jpg",dpi=400)
+    plt.clf()
+    np.savetxt( f"PHOT_WFN_FOCK_BASIS_{TYPE}_WC_{round(WC)}.dat", np.c_[ R_LIST, AVE_N[:,:,WCi] ] )
+np.savetxt( f"PHOT_WFN_FOCK_BASIS_MAX_{TYPE}.dat", np.c_[A0_LIST, AVE_N_MAX_R[:,:] ] )
