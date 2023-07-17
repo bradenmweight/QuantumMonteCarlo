@@ -53,47 +53,51 @@ def get_potential(x, PARAM):
             MU_NUC      = np.einsum("N,Nd->d", Z_NUC[:], R_NUC[:,:] ) # Sum over nuclei
             MU_EL       = np.einsum("ewd->wd", x[:,:,:] ) # Sum over electrons
             
-            MU_TOT = MU_NUC[:] - MU_EL[:,:]
+            MU_TOT = MU_NUC[:] - MU_EL[:,:] # Total molecular dipole vector for each walker
 
             MU_TOT_PROJ = np.einsum( "wd,d->w", MU_TOT, EPOL ) # Project along field polarization
             V_elph      = np.sqrt(2 * WC**3) * A0 * MU_TOT_PROJ[:] * QC[:] # QC = 1/sqrt(2WC) * ( a.T + a )
 
 
-            """
+
 
             ### DIPOLE SELF-ENERGY ###
             # mu**2 = T1 + T2 + T3
-            # T1 =    \sum_{p,p'}^{N_el} x_p * x_p'
+            # T1 =    \sum_{p <= p'}^{N_el} x_p * x_p'
             # T2 = -2*\sum_{p}^{N_el} \sum_{I}^{N_IONS} x_p * R_I
-            # T3 =    \sum_{I,I'}^{N_IONS} R_I * R_I'
+            # T3 =    \sum_{I <= I'}^{N_IONS} R_I * R_I'
             # This might be same as squaring the mu from the previous direct interaction term
             #       I just wonder about the p != pp terms. ~BMW
             T1 = np.zeros( (NWALKERS) )
             for p in range( NELECTRONS ):
-                for pp in range( NELECTRONS ):
+                for pp in range( NELECTRONS ): # Double counting should happen.
                     # This has a plus sign since (-x)*(-x)=x^2
                     T1 += np.einsum( "wd,d->w", x[p,:,:] * x[pp,:,:], EPOL )
             
             T2 = np.zeros( (NWALKERS) )
             for p in range( NELECTRONS ):
-                for Ri, R in enumerate( R_NUC ):
+                for Ri, R in enumerate( R_NUC ): # Double counting is not possible here
                     # This has a minus sign since (-x)*(R)=-xR
                     # Factor 2.000 comes from the binomial expansion
                     T2 += -2.000 * np.einsum( "wd,d->w", x[p,:,:] * Z_NUC[Ri] * R_NUC[Ri,:], EPOL )
 
             T3 = 0
-            for Ri1, R1 in enumerate( R_NUC ):
-                for Ri2, R2 in enumerate( R_NUC ):
-                    # This has a plus sign since (R)*(R)=-R^2
+            for Ri1 in range( len(R_NUC) ):
+                for Ri2 in range( len(R_NUC) ): # Double counting should happen.
+                    # This has a plus sign since (R)*(R)=R^2
                     T3 += np.einsum( "d,d->", Z_NUC[Ri1] * R_NUC[Ri1,:] * Z_NUC[Ri2] * R_NUC[Ri2,:], EPOL )
-
 
             MU_2 = T1 + T2 + T3
             V_DSE = WC * A0**2 * MU_2
 
-            """
-            V_DSE = WC * A0**2 * MU_TOT_PROJ**2
-
+            
+            ##### OPTION 2 #####
+            # TODO
+            # THIS IS ASSUMING MU CAN SIMPLY BE SQUARED
+            # THIS SHOULD WORK FINE, BUT DO I WANT TO TEST THIS TO MAKE SURE...?
+            # HOW MUCH TIME WOULD THIS SAVE ?
+            #V_DSE = WC * A0**2 * MU_TOT_PROJ**2
+            ####################
 
 
             return V_EL + V_NUC + V_PH + V_elph + V_DSE
