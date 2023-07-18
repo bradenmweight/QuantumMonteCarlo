@@ -1,0 +1,49 @@
+
+  Memory set to  55.879 GiB by Python driver.
+  Threads set to 1 by Python driver.
+Settings:
+	LOT = CCSD-S2-U22
+	wc = 20.0 eV
+	lambda = [0.727454 0.       0.      ] a.u.
+	Equivalent A0 = LAMBDA / sqrt(2 wc) = [0.6 0.  0. ])
+doing QED-CCSD-Full (or QED-CCSD-22)
+Number of occupied orbitals:   1
+Number of basis functions:  60
+SCF Iteration   1: Energy = -0.3150036023978859 dE = -3.15004E-01
+SCF Iteration   2: Energy = -0.5890355810622738 dE = -2.74032E-01
+SCF Iteration   3: Energy = -0.5931557195734540 dE = -4.12014E-03
+SCF Iteration   4: Energy = -0.5932492454161893 dE = -9.35258E-05
+SCF Iteration   5: Energy = -0.5932518959461297 dE = -2.65053E-06
+SCF Iteration   6: Energy = -0.5932519841988348 dE = -8.82527E-08
+SCF Iteration   7: Energy = -0.5932519874548459 dE = -3.25601E-09
+SCF Iteration   8: Energy = -0.5932519875820366 dE = -1.27191E-10
+SCF Iteration   9: Energy = -0.5932519875871531 dE = -5.11657E-12
+
+SCF converged.
+E_QED_HF          = -0.593251987587153
+HF  (psi4)        = -1.096598910587796
+Starting with the CCSD calculation:
+
+Iter  Energy(CCSD)      E_diff    time(sec)
+  1:  -0.3206787659  3.20679E-01   19.039
+  2:  -0.3236578580  2.97909E-03   19.041
+  3:  -0.3343019894  1.06441E-02   19.036
+  4:  -0.3437939987  9.49201E-03   19.035
+  5:  -0.3480772994  4.28330E-03   19.039
+  6:  -0.3489118690  8.34570E-04   19.025
+  7:  -0.3493195571  4.07688E-04   19.029
+  8:  -0.3496337793  3.14222E-04   19.031
+  9:  -0.3496935236  5.97444E-05   19.019
+ 10:  -0.3497331475  3.96239E-05   19.021
+ 11:  -0.3497343033  1.15580E-06   19.028
+ 12:  -0.3497384901  4.18683E-06   19.029
+ 13:  -0.3497390759  5.85777E-07   19.028
+ 14:  -0.3497384785  5.97381E-07   19.026
+ 15:  -0.3497382656  2.12907E-07   19.020
+ 16:  -0.3497381278  1.37834E-07   19.021
+ 17:  -0.3497381072  2.05877E-08   19.029
+ 18:  -0.3497381003  6.86486E-09   19.025
+E_QED_CCSD  (Corr.)  = -0.349738100343108
+E_QED_CCSD tot       = -0.942990087930261
+E_CCSD_psi4 (Corr.)  = -0.045372746139230
+E_CCSD_psi4 tot      = -1.141971656727026

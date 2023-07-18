@@ -1,0 +1,49 @@
+
+  Memory set to  55.879 GiB by Python driver.
+  Threads set to 1 by Python driver.
+Settings:
+	LOT = CCSD-S1-U21
+	wc = 20.0 eV
+	lambda = [0.363727 0.       0.      ] a.u.
+	Equivalent A0 = LAMBDA / sqrt(2 wc) = [0.3 0.  0. ])
+doing QED-CCSD-1 (or QED-CCSD-21)
+Number of occupied orbitals:   1
+Number of basis functions:  60
+SCF Iteration   1: Energy = -0.4120483156841295 dE = -4.12048E-01
+SCF Iteration   2: Energy = -0.5332132156900804 dE = -1.21165E-01
+SCF Iteration   3: Energy = -0.5366292753504263 dE = -3.41606E-03
+SCF Iteration   4: Energy = -0.5367471269562007 dE = -1.17852E-04
+SCF Iteration   5: Energy = -0.5367515679333950 dE = -4.44098E-06
+SCF Iteration   6: Energy = -0.5367517506637138 dE = -1.82730E-07
+SCF Iteration   7: Energy = -0.5367517589060737 dE = -8.24236E-09
+SCF Iteration   8: Energy = -0.5367517593102777 dE = -4.04204E-10
+SCF Iteration   9: Energy = -0.5367517593314357 dE = -2.11580E-11
+
+SCF converged.
+E_QED_HF          = -0.536751759331436
+HF  (psi4)        = -0.928103769523730
+Starting with the CCSD calculation:
+
+Iter  Energy(CCSD)      E_diff    time(sec)
+  1:  -0.4660847515  4.66085E-01   10.099
+  2:  -0.4732609354  7.17618E-03   10.105
+  3:  -0.3338846787  1.39376E-01   10.100
+  4:  -0.4190976906  8.52130E-02   10.104
+  5:  -0.4223357100  3.23802E-03   10.105
+  6:  -0.4131691848  9.16653E-03   10.101
+  7:  -0.4122861556  8.83029E-04   10.092
+  8:  -0.4126552710  3.69115E-04   10.091
+  9:  -0.4127474039  9.21330E-05   10.098
+ 10:  -0.4126726067  7.47972E-05   10.094
+ 11:  -0.4126810691  8.46236E-06   10.091
+ 12:  -0.4126856933  4.62424E-06   10.093
+ 13:  -0.4126841846  1.50874E-06   10.099
+ 14:  -0.4126843575  1.72938E-07   10.092
+ 15:  -0.4126844329  7.53990E-08   10.098
+ 16:  -0.4126845156  8.26855E-08   10.093
+ 17:  -0.4126844670  4.85838E-08   10.095
+ 18:  -0.4126844683  1.24359E-09   10.097
+E_QED_CCSD  (Corr.)  = -0.412684468251864
+E_QED_CCSD tot       = -0.949436227583300
+E_CCSD_psi4 (Corr.)  = -0.094256007140902
+E_CCSD_psi4 tot      = -1.022359776664632

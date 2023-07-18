@@ -1,0 +1,50 @@
+
+  Memory set to  55.879 GiB by Python driver.
+  Threads set to 1 by Python driver.
+Settings:
+	LOT = CCSD-S1-U21
+	wc = 20.0 eV
+	lambda = [0.848697 0.       0.      ] a.u.
+	Equivalent A0 = LAMBDA / sqrt(2 wc) = [0.7 0.  0. ])
+doing QED-CCSD-1 (or QED-CCSD-21)
+Number of occupied orbitals:   1
+Number of basis functions:  60
+SCF Iteration   1: Energy = 0.0865507609996742 dE =  8.65508E-02
+SCF Iteration   2: Energy = -0.3956882805113719 dE = -4.82239E-01
+SCF Iteration   3: Energy = -0.4011933849525959 dE = -5.50510E-03
+SCF Iteration   4: Energy = -0.4013088706322053 dE = -1.15486E-04
+SCF Iteration   5: Energy = -0.4013121693894857 dE = -3.29876E-06
+SCF Iteration   6: Energy = -0.4013122810739363 dE = -1.11684E-07
+SCF Iteration   7: Energy = -0.4013122851834190 dE = -4.10948E-09
+SCF Iteration   8: Energy = -0.4013122853405260 dE = -1.57107E-10
+SCF Iteration   9: Energy = -0.4013122853466375 dE = -6.11144E-12
+
+SCF converged.
+E_QED_HF          = -0.401312285346637
+HF  (psi4)        = -1.081164575569376
+Starting with the CCSD calculation:
+
+Iter  Energy(CCSD)      E_diff    time(sec)
+  1:  -0.4389973028  4.38997E-01   10.102
+  2:  -0.3850888069  5.39085E-02   10.106
+  3:  -0.3827471291  2.34168E-03   10.101
+  4:  -0.4154355902  3.26885E-02   10.102
+  5:  -0.4129894091  2.44618E-03   10.101
+  6:  -0.4136232016  6.33792E-04   10.100
+  7:  -0.4156596666  2.03647E-03   10.112
+  8:  -0.4168466345  1.18697E-03   10.110
+  9:  -0.4173554368  5.08802E-04   10.100
+ 10:  -0.4172980003  5.74365E-05   10.100
+ 11:  -0.4172631121  3.48882E-05   10.100
+ 12:  -0.4172936114  3.04993E-05   10.099
+ 13:  -0.4172998867  6.27532E-06   10.098
+ 14:  -0.4172968941  2.99262E-06   10.099
+ 15:  -0.4172947912  2.10291E-06   10.097
+ 16:  -0.4172949577  1.66494E-07   10.104
+ 17:  -0.4172951187  1.61018E-07   10.098
+ 18:  -0.4172951503  3.16065E-08   10.102
+ 19:  -0.4172951414  8.93239E-09   10.102
+E_QED_CCSD  (Corr.)  = -0.417295141366702
+E_QED_CCSD tot       = -0.818607426713339
+E_CCSD_psi4 (Corr.)  = -0.047429613508254
+E_CCSD_psi4 tot      = -1.128594189077630

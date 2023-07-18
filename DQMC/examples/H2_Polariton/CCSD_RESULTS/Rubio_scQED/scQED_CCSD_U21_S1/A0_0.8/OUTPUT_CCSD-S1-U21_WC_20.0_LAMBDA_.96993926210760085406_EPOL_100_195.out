@@ -1,0 +1,49 @@
+
+  Memory set to  55.879 GiB by Python driver.
+  Threads set to 1 by Python driver.
+Settings:
+	LOT = CCSD-S1-U21
+	wc = 20.0 eV
+	lambda = [0.969939 0.       0.      ] a.u.
+	Equivalent A0 = LAMBDA / sqrt(2 wc) = [0.8 0.  0. ])
+doing QED-CCSD-1 (or QED-CCSD-21)
+Number of occupied orbitals:   1
+Number of basis functions:  60
+SCF Iteration   1: Energy = 0.2929038595354605 dE =  2.92904E-01
+SCF Iteration   2: Energy = -0.3179086829721360 dE = -6.10813E-01
+SCF Iteration   3: Energy = -0.3236487328475041 dE = -5.74005E-03
+SCF Iteration   4: Energy = -0.3237599650114950 dE = -1.11232E-04
+SCF Iteration   5: Energy = -0.3237629946399578 dE = -3.02963E-06
+SCF Iteration   6: Energy = -0.3237630926382624 dE = -9.79983E-08
+SCF Iteration   7: Energy = -0.3237630960781038 dE = -3.43984E-09
+SCF Iteration   8: Energy = -0.3237630962034148 dE = -1.25311E-10
+SCF Iteration   9: Energy = -0.3237630962080540 dE = -4.63918E-12
+
+SCF converged.
+E_QED_HF          = -0.323763096208054
+HF  (psi4)        = -1.096598910587802
+Starting with the CCSD calculation:
+
+Iter  Energy(CCSD)      E_diff    time(sec)
+  1:  -0.4725289694  4.72529E-01   10.119
+  2:  -0.4041680162  6.83610E-02   10.121
+  3:  -0.4037388450  4.29171E-04   10.120
+  4:  -0.4405093719  3.67705E-02   10.116
+  5:  -0.4373735529  3.13582E-03   10.120
+  6:  -0.4384713074  1.09775E-03   10.118
+  7:  -0.4409869121  2.51560E-03   10.121
+  8:  -0.4424694457  1.48253E-03   10.118
+  9:  -0.4430760909  6.06645E-04   10.116
+ 10:  -0.4430364147  3.96761E-05   10.114
+ 11:  -0.4430245292  1.18855E-05   10.109
+ 12:  -0.4430868372  6.23079E-05   10.114
+ 13:  -0.4430927793  5.94210E-06   10.110
+ 14:  -0.4430890039  3.77536E-06   10.114
+ 15:  -0.4430849427  4.06116E-06   10.117
+ 16:  -0.4430856031  6.60389E-07   10.113
+ 17:  -0.4430858528  2.49650E-07   10.112
+ 18:  -0.4430858583  5.49497E-09   10.116
+E_QED_CCSD  (Corr.)  = -0.443085858269911
+E_QED_CCSD tot       = -0.766848954477965
+E_CCSD_psi4 (Corr.)  = -0.045372746139224
+E_CCSD_psi4 tot      = -1.141971656727027

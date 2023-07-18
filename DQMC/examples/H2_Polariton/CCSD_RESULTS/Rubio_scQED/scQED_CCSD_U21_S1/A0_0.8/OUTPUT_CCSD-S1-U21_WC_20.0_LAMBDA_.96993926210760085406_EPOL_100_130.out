@@ -1,0 +1,48 @@
+
+  Memory set to  55.879 GiB by Python driver.
+  Threads set to 1 by Python driver.
+Settings:
+	LOT = CCSD-S1-U21
+	wc = 20.0 eV
+	lambda = [0.969939 0.       0.      ] a.u.
+	Equivalent A0 = LAMBDA / sqrt(2 wc) = [0.8 0.  0. ])
+doing QED-CCSD-1 (or QED-CCSD-21)
+Number of occupied orbitals:   1
+Number of basis functions:  60
+SCF Iteration   1: Energy = -0.2334561606998079 dE = -2.33456E-01
+SCF Iteration   2: Energy = -0.5643309505660402 dE = -3.30875E-01
+SCF Iteration   3: Energy = -0.5677788493340564 dE = -3.44790E-03
+SCF Iteration   4: Energy = -0.5678392260516808 dE = -6.03767E-05
+SCF Iteration   5: Energy = -0.5678405543615695 dE = -1.32831E-06
+SCF Iteration   6: Energy = -0.5678405888789745 dE = -3.45174E-08
+SCF Iteration   7: Energy = -0.5678405899068893 dE = -1.02791E-09
+SCF Iteration   8: Energy = -0.5678405899407385 dE = -3.38491E-11
+
+SCF converged.
+E_QED_HF          = -0.567840589940738
+HF  (psi4)        = -1.131821768949310
+Starting with the CCSD calculation:
+
+Iter  Energy(CCSD)      E_diff    time(sec)
+  1:  -0.2877697257  2.87770E-01   10.088
+  2:  -0.2646343645  2.31354E-02   10.088
+  3:  -0.2712256578  6.59129E-03   10.094
+  4:  -0.2777535185  6.52786E-03   10.090
+  5:  -0.2776531270  1.00392E-04   10.092
+  6:  -0.2782256908  5.72564E-04   10.091
+  7:  -0.2787946628  5.68972E-04   10.089
+  8:  -0.2790228791  2.28216E-04   10.087
+  9:  -0.2790727892  4.99102E-05   10.089
+ 10:  -0.2790727340  5.52014E-08   10.090
+ 11:  -0.2790716831  1.05096E-06   10.084
+ 12:  -0.2790729418  1.25870E-06   10.086
+ 13:  -0.2790742123  1.27049E-06   10.087
+ 14:  -0.2790742604  4.81478E-08   10.085
+ 15:  -0.2790740568  2.03652E-07   10.083
+ 16:  -0.2790740258  3.09471E-08   10.084
+ 17:  -0.2790740528  2.70208E-08   10.089
+ 18:  -0.2790740608  7.94307E-09   10.086
+E_QED_CCSD  (Corr.)  = -0.279074060774831
+E_QED_CCSD tot       = -0.846914650715570
+E_CCSD_psi4 (Corr.)  = -0.039790887188428
+E_CCSD_psi4 tot      = -1.171612656137738
