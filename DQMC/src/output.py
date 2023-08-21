@@ -32,7 +32,8 @@ def get_Photon_Number( WFN, EDGES, FREQ ):
         PHI_n /= np.sqrt( np.sum(PHI_n**2) * dq )
         OVLP[n] = np.sum( WFN * PHI_n ) * dq
 
-    N_AVE = np.average( np.arange(NMAX) * OVLP**2 )
+    #N_AVE = np.average( np.arange(NMAX) * OVLP**2 )
+    N_AVE = np.sum( np.arange(NMAX) * OVLP**2 ) / np.sum( OVLP**2 )
     #print( "<N> = ", N_AVE )
     #print("Overlap:\n",OVLP)
     return N_AVE, OVLP
