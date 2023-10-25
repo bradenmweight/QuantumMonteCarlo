@@ -31,7 +31,8 @@ def DMC( PARAM, positions=None ):
 
         # Use final configuration as initial guess
         positions = positions
-        PARAM["QC"] = PARAM["QC"]
+        if ( PARAM["DO_POLARITON"] == True ):
+            PARAM["QC"] = PARAM["QC"]
 
 
         # Sample from equilibrium wavefunction -- THIS GIVES ANOTHER (ALBEIT SHORTER) EQUILIBRIUM TIME, WHICH IS ANNOYING ~BMW
